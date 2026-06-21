@@ -1,0 +1,15 @@
+{
+  "name": "hyperframes-agent",
+  "private": true,
+  "type": "module",
+  "description": "Agent-ready HyperFrames project for authoring and rendering videos as code.",
+  "scripts": {
+    "dev": "npx --yes hyperframes@0.6.119 preview",
+    "preview": "npx --yes hyperframes@0.6.119 preview",
+    "lint": "npx --yes hyperframes@0.6.119 lint",
+    "check": "npx --yes hyperframes@0.6.119 lint && npx --yes hyperframes@0.6.119 validate && npx --yes hyperframes@0.6.119 inspect",
+    "render": "npx --yes hyperframes@0.6.119 render",
+    "doctor": "npx --yes hyperframes@0.6.119 doctor",
+    "publish": "npx --yes hyperframes@0.6.119 publish"
+  }
+}

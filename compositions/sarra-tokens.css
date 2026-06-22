@@ -1,0 +1,152 @@
+/* ============================================================
+ * สาระไม่น่ารู้ — Design Tokens
+ *
+ * Import นี้ใน <head> ของ index.html หรือ sub-composition:
+ *   <link rel="stylesheet" href="compositions/sarra-tokens.css">
+ *
+ * แล้วเรียกใช้ผ่าน var(--...)  ทั้งหมด
+ * วาง font .woff2 ที่ assets/fonts/ ตามชื่อใน @font-face ด้านล่าง
+ * ============================================================ */
+
+/* ---------- Fonts ---------- */
+
+@font-face {
+  font-family: "Anuphan";
+  src: url("../assets/fonts/Anuphan-ExtraBold.woff2") format("woff2");
+  font-weight: 800;
+  font-style: normal;
+  font-display: block; /* block = wait, ป้องกัน FOUT ใน render */
+}
+
+@font-face {
+  font-family: "Anuphan";
+  src: url("../assets/fonts/Anuphan-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: block;
+}
+
+@font-face {
+  font-family: "IBM Plex Sans Thai";
+  src: url("../assets/fonts/IBMPlexSansThai-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: block;
+}
+
+@font-face {
+  font-family: "IBM Plex Sans Thai";
+  src: url("../assets/fonts/IBMPlexSansThai-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: block;
+}
+
+@font-face {
+  font-family: "Bai Jamjuree";
+  src: url("../assets/fonts/BaiJamjuree-SemiBold.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: block;
+}
+
+/* ---------- Tokens ---------- */
+
+:root {
+  /* Palette — โทนดาร์ก + อันตราย ตาม DNA */
+  --color-bg:        #0A0A0A;   /* พื้นหลังหลัก */
+  --color-bg-2:      #1A1A1A;   /* พื้นหลังรอง */
+  --color-fg:        #F5F5F5;   /* ตัวอักษรหลัก */
+  --color-muted:     #9A9AA0;
+  --color-danger:    #FF2D2D;   /* ปรับจาก #FF0000 ให้นุ่มตาบนกล้องเล็กน้อย */
+  --color-warning:   #FFD700;
+  --color-accent:    #FF6B1A;   /* ส้มไฟ — สำหรับ accent emphasis */
+
+  /* Type scale — video size (ดู docs/08) */
+  --display:   220px;   /* hook keyword ใหญ่กลางจอ */
+  --keyword:   160px;   /* keyword punch */
+  --headline:  96px;    /* หัวข้อ scene */
+  --subhead:   64px;
+  --caption:   48px;    /* คำบรรยายติดเสียงพากย์ */
+  --body:      32px;
+  --label:     20px;
+
+  /* Font families */
+  --font-display: "Anuphan", "IBM Plex Sans Thai", system-ui, sans-serif;
+  --font-body:    "IBM Plex Sans Thai", "Bai Jamjuree", system-ui, sans-serif;
+
+  /* Spacing (ตาราง 8) */
+  --s-1: 8px;
+  --s-2: 16px;
+  --s-3: 24px;
+  --s-4: 32px;
+  --s-6: 48px;
+  --s-8: 64px;
+
+  /* Shadows / outlines (สำคัญ: DNA ต้องการตัวอักษรเด่นบน bg ภาพ) */
+  --text-outline:
+    -2px -2px 0 #000,
+     2px -2px 0 #000,
+    -2px  2px 0 #000,
+     2px  2px 0 #000,
+     0    4px 12px rgba(0,0,0,0.85);
+
+  --text-shadow-soft: 0 6px 24px rgba(0,0,0,0.7);
+}
+
+/* ---------- Utility classes ---------- */
+
+.sarra-display {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--display);
+  line-height: 0.95;
+  letter-spacing: -0.01em;
+  color: var(--color-fg);
+  text-shadow: var(--text-outline);
+}
+
+.sarra-keyword {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--keyword);
+  line-height: 0.95;
+  color: var(--color-warning);
+  text-shadow: var(--text-outline);
+  text-transform: uppercase;
+}
+
+.sarra-headline {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--headline);
+  line-height: 1.05;
+  color: var(--color-fg);
+  text-shadow: var(--text-shadow-soft);
+}
+
+.sarra-caption {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: var(--caption);
+  line-height: 1.2;
+  color: var(--color-fg);
+  text-shadow: var(--text-outline);
+}
+
+.sarra-danger { color: var(--color-danger); }
+.sarra-warning { color: var(--color-warning); }
+.sarra-accent { color: var(--color-accent); }
+
+/* Grain (CSS-only — ปลอดภัยกับ shader transitions) */
+.sarra-grain {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    radial-gradient(rgba(255,255,255,0.06) 1px, transparent 1.2px),
+    radial-gradient(rgba(0,0,0,0.22)        1px, transparent 1.2px);
+  background-size: 3px 3px, 5px 5px;
+  mix-blend-mode: overlay;
+  opacity: 0.6;
+}

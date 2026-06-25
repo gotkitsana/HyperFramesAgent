@@ -1,163 +1,296 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="th">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=1920, height=1080" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1080, height=1920">
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
     <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
+      @font-face {
+        font-family: "BaiJamjuree";
+        src: url("./assets/fonts/Bai_Jamjuree/BaiJamjuree-SemiBold.ttf") format("truetype");
+        font-weight: 600;
+        font-display: block;
       }
-      html,
-      body {
-        margin: 0;
-        width: 1920px;
-        height: 1080px;
-        overflow: hidden;
-        background: #0a0a0f;
+      @font-face {
+        font-family: "BaiJamjuree";
+        src: url("./assets/fonts/Bai_Jamjuree/BaiJamjuree-Bold.ttf") format("truetype");
+        font-weight: 800;
+        font-display: block;
       }
-      body {
-        font-family: "Inter", sans-serif;
-        color: #f5f5f7;
+      @font-face {
+        font-family: "BaiJamjuree";
+        src: url("./assets/fonts/Bai_Jamjuree/BaiJamjuree-Light.ttf") format("truetype");
+        font-weight: 300;
+        font-display: block;
       }
 
-      /* --- layout primitives --- */
-      .center {
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: #1a1410;
+        font-family: "BaiJamjuree", "Inter", sans-serif;
+      }
+
+      #root {
+        position: relative;
+        width: 1080px;
+        height: 1920px;
+      }
+
+      .bg {
         position: absolute;
         inset: 0;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .overlay {
+        position: absolute;
+        inset: 0;
+        background:
+          radial-gradient(ellipse at center, rgba(245, 237, 224, 0) 30%, rgba(42, 24, 16, 0.45) 100%),
+          linear-gradient(180deg, rgba(42, 24, 16, 0.15) 0%, rgba(42, 24, 16, 0) 35%, rgba(42, 24, 16, 0.55) 100%);
+        pointer-events: none;
+      }
+
+      .grain {
+        position: absolute;
+        inset: 0;
+        background-image:
+          radial-gradient(circle at 30% 20%, rgba(255, 230, 180, 0.06) 0%, transparent 60%),
+          radial-gradient(circle at 70% 80%, rgba(255, 200, 130, 0.05) 0%, transparent 60%);
+        mix-blend-mode: overlay;
+        pointer-events: none;
+      }
+
+      /* Caption position per hyperframes-media skill: portrait => 600-700px from bottom */
+      .caption {
+        position: absolute;
+        left: 60px;
+        right: 60px;
+        bottom: 640px;
         text-align: center;
-      }
-
-      /* Scene 1 — kicker + title */
-      #kicker {
-        font-size: 28px;
-        font-weight: 300;
-        letter-spacing: 0.5em;
-        text-transform: uppercase;
-        color: #8b8b9a;
-        margin-bottom: 28px;
-      }
-      #title {
-        font-size: 200px;
-        font-weight: 900;
-        line-height: 0.95;
-        background: linear-gradient(120deg, #fff 0%, #7aa2ff 60%, #b388ff 100%);
-        -webkit-background-clip: text;
-        background-clip: text;
-        color: transparent;
-      }
-
-      /* Scene 2 — count-up stat */
-      #stat {
-        font-size: 320px;
-        font-weight: 900;
-        font-variant-numeric: tabular-nums;
-        color: #7aa2ff;
-      }
-      #stat-label {
-        font-size: 34px;
-        font-weight: 300;
-        letter-spacing: 0.18em;
-        text-transform: uppercase;
-        color: #8b8b9a;
-        margin-top: 12px;
-      }
-
-      /* Scene 3 — outro */
-      #outro {
-        font-size: 120px;
+        font-family: "BaiJamjuree", "Inter", sans-serif;
         font-weight: 800;
+        font-size: 86px;
+        line-height: 1.22;
+        color: #f5ede0;
+        letter-spacing: 0.01em;
+        text-shadow:
+          0 6px 32px rgba(0, 0, 0, 0.85),
+          0 2px 0 rgba(0, 0, 0, 0.6);
+        overflow: visible;
+        will-change: opacity, transform;
       }
-      #outro small {
-        display: block;
-        font-size: 30px;
+      .caption .accent { color: #ffd970; }
+      .caption.small { font-size: 70px; font-weight: 600; }
+      .caption.closing {
+        font-size: 64px;
+        font-weight: 600;
+        line-height: 1.32;
+        bottom: 540px;
+      }
+
+      .endmark {
+        position: absolute;
+        top: 280px;
+        left: 0;
+        right: 0;
+        text-align: center;
+        font-size: 42px;
         font-weight: 300;
-        letter-spacing: 0.3em;
-        text-transform: uppercase;
-        color: #8b8b9a;
-        margin-top: 32px;
+        letter-spacing: 0.45em;
+        color: rgba(245, 237, 224, 0.85);
+        text-shadow: 0 2px 16px rgba(0, 0, 0, 0.6);
+      }
+
+      .glow {
+        position: absolute;
+        width: 700px;
+        height: 700px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(230, 192, 104, 0.45) 0%, transparent 60%);
+        mix-blend-mode: screen;
+        pointer-events: none;
+        filter: blur(24px);
       }
     </style>
   </head>
   <body>
-    <!--
-      Example composition: a 10s, three-scene title card.
-      Demonstrates the "Rule of Three": the root declares the composition,
-      every timed element is class="clip" with data-start/duration/track-index,
-      and the GSAP timeline is paused + registered on window.__timelines.
-      Edit freely — run `npm run check` after every change.
-    -->
-    <div
-      id="root"
-      data-composition-id="main"
-      data-start="0"
-      data-duration="10"
-      data-width="1920"
-      data-height="1080"
-    >
-      <!-- Scene 1: 0-4s -->
-      <div id="scene-1" class="clip center" data-start="0" data-duration="4" data-track-index="0">
-        <div id="kicker">Built for agents</div>
-        <div id="title">HyperFrames</div>
+    <div data-hf-id="hf-0q1y" id="root" data-composition-id="fear-ep01" data-start="0" data-duration="46" data-width="1080" data-height="1920">
+      <!-- =====================  BACKGROUND VIDEOS (track 0)  ===================== -->
+      <!-- All trims via data-media-start; durations match VO scene segments -->
+
+      <video data-hf-id="hf-95s5" id="bg-1" class="bg clip" data-start="0" data-duration="2.5" data-track-index="0" data-media-start="0" src="channel/ปรัชญา/episodes/ep01-ความกลัว/b-roll/video-1.mp4" muted playsinline></video>
+
+      <video data-hf-id="hf-cic9" id="bg-2" class="bg clip" data-start="2.5" data-duration="5.5" data-track-index="0" data-media-start="0" src="channel/ปรัชญา/episodes/ep01-ความกลัว/b-roll/video-2.mp4" muted playsinline></video>
+
+      <video data-hf-id="hf-c68z" id="bg-3" class="bg clip" data-start="8" data-duration="8" data-track-index="0" data-media-start="1" src="channel/ปรัชญา/episodes/ep01-ความกลัว/b-roll/video-3.mp4" muted playsinline></video>
+
+      <video data-hf-id="hf-5y3h" id="bg-4" class="bg clip" data-start="16" data-duration="9.5" data-track-index="0" data-media-start="0" src="channel/ปรัชญา/episodes/ep01-ความกลัว/b-roll/video-4.mp4" muted playsinline></video>
+
+      <video data-hf-id="hf-r26v" id="bg-5" class="bg clip" data-start="25.5" data-duration="7" data-track-index="0" data-media-start="1.5" src="channel/ปรัชญา/episodes/ep01-ความกลัว/b-roll/video-5.mp4" muted playsinline></video>
+
+      <video data-hf-id="hf-1slq" id="bg-6" class="bg clip" data-start="32.5" data-duration="5.5" data-track-index="0" data-media-start="2" src="channel/ปรัชญา/episodes/ep01-ความกลัว/b-roll/video-6.mp4" muted playsinline></video>
+
+      <video data-hf-id="hf-sda4" id="bg-7" class="bg clip" data-start="38" data-duration="3.5" data-track-index="0" data-media-start="5" src="channel/ปรัชญา/episodes/ep01-ความกลัว/b-roll/video-7.mp4" muted playsinline></video>
+
+      <video data-hf-id="hf-ibd5" id="bg-8" class="bg clip" data-start="41.5" data-duration="4.5" data-track-index="0" data-media-start="0" src="channel/ปรัชญา/episodes/ep01-ความกลัว/b-roll/video-8.mp4" muted playsinline></video>
+
+      <!-- =====================  WARM VIGNETTE (track 1)  ===================== -->
+      <div data-hf-id="hf-rwpd" id="overlay" class="overlay clip" data-start="0" data-duration="46" data-track-index="1"></div>
+
+      <!-- =====================  GOLD GLOWS (track 2)  ===================== -->
+      <div data-hf-id="hf-2yq6" id="glow-1" class="glow clip" data-start="0" data-duration="2.5" data-track-index="2" style="top: 700px; left: 190px;"></div>
+      <div data-hf-id="hf-1flx" id="glow-3" class="glow clip" data-start="8" data-duration="8" data-track-index="2" style="top: 600px; left: 270px;"></div>
+      <div data-hf-id="hf-z8h3" id="glow-6" class="glow clip" data-start="32.5" data-duration="5.5" data-track-index="2" style="top: 450px; left: 190px; width: 800px; height: 800px;"></div>
+      <div data-hf-id="hf-tfhz" id="glow-7" class="glow clip" data-start="38" data-duration="3.5" data-track-index="2" style="top: 750px; left: 190px;"></div>
+
+      <!-- =====================  CAPTIONS (track 3)  ===================== -->
+      <!-- VO-aligned, leave breathing time around accents -->
+
+      <div data-hf-id="hf-s2oz" id="cap-1" class="caption clip" data-start="0.4" data-duration="2.0" data-track-index="3">
+        <div data-hf-id="hf-grrn" class="caption-inner">คุณกลัวอะไร<br data-hf-id="hf-x5px">ที่สุดในชีวิต<span data-hf-id="hf-rq2g" class="accent">?</span></div>
       </div>
 
-      <!-- Scene 2: 4-7s -->
-      <div id="scene-2" class="clip center" data-start="4" data-duration="3" data-track-index="0">
-        <div id="stat">0</div>
-        <div id="stat-label">frames, fully deterministic</div>
+      <div data-hf-id="hf-tg3h" id="cap-3" class="caption small clip" data-start="8.6" data-duration="7.0" data-track-index="3">
+        <div data-hf-id="hf-48yq" class="caption-inner">Epictetus เคยบอกว่า…</div>
       </div>
 
-      <!-- Scene 3: 7-10s -->
-      <div id="scene-3" class="clip center" data-start="7" data-duration="3" data-track-index="0">
-        <div id="outro">
-          Write HTML. Render video.
-          <small>npm run render</small>
-        </div>
+      <div data-hf-id="hf-n31s" id="cap-4" class="caption clip" data-start="17.2" data-duration="6.8" data-track-index="3">
+        <div data-hf-id="hf-cvgx" class="caption-inner">เราไม่ได้กลัว<br data-hf-id="hf-rsrt">สิ่งนั้นจริง ๆ</div>
       </div>
+
+      <div data-hf-id="hf-aq1f" id="cap-5" class="caption clip" data-start="26.2" data-duration="5.5" data-track-index="3">
+        <div data-hf-id="hf-ipo8" class="caption-inner">แต่ภาพในหัว<br data-hf-id="hf-szow"><span data-hf-id="hf-xlmr" class="accent">ต่างหาก</span></div>
+      </div>
+
+      <div data-hf-id="hf-j9zc" id="cap-6" class="caption clip" data-start="33.4" data-duration="4.0" data-track-index="3">
+        <div data-hf-id="hf-2389" class="caption-inner">ความกลัว<br data-hf-id="hf-sldv">คือสัญญาณ</div>
+      </div>
+
+      <div data-hf-id="hf-pla0" id="cap-7" class="caption clip" data-start="38.4" data-duration="2.8" data-track-index="3">
+        <div data-hf-id="hf-93r5" class="caption-inner">มันจะกลายเป็น<br data-hf-id="hf-qluq"><span data-hf-id="hf-txsi" class="accent">พลัง</span></div>
+      </div>
+
+      <div data-hf-id="hf-udsy" id="cap-8" class="caption closing clip" data-start="41.8" data-duration="4.0" data-track-index="3">
+        <div data-hf-id="hf-2noo" class="caption-inner">สิ่งที่คุณกลัว<br data-hf-id="hf-q7jp">มันกำลังควบคุมคุณ<br data-hf-id="hf-regs">อยู่จริง ๆ หรือ<span data-hf-id="hf-w5n4" class="accent">?</span></div>
+      </div>
+
+      <!-- =====================  ENDMARK (track 4)  ===================== -->
+      <div data-hf-id="hf-yq3a" id="endmark" class="endmark clip" data-start="41.5" data-duration="4.5" data-track-index="4">
+        ปรัชญา · EP.1
+      </div>
+
+      <!-- =====================  GRAIN (track 5)  ===================== -->
+      <div data-hf-id="hf-2ea7" id="grain" class="grain clip" data-start="0" data-duration="46" data-track-index="5"></div>
+
+      <!-- =====================  AUDIO  ===================== -->
+
+      <audio data-hf-id="hf-32tc" id="audio-vo" class="clip" data-start="0" data-duration="41" data-track-index="10" data-volume="1.0" src="channel/ปรัชญา/episodes/ep01-ความกลัว/voice-over.wav"></audio>
+
+      <audio data-hf-id="hf-e8f6" id="sfx-hook-boom" class="clip" data-start="0" data-duration="2" data-track-index="11" data-volume="0.35" src="channel/ปรัชญา/episodes/ep01-ความกลัว/sfx/Deep_cinematic_impac_%231-1772792287856.wav"></audio>
+
+      <audio data-hf-id="hf-cnpi" id="sfx-snake-hum" class="clip" data-start="25.5" data-duration="7" data-track-index="12" data-volume="0.22" src="channel/ปรัชญา/episodes/ep01-ความกลัว/sfx/Eerie_glowing_hum,_c_%231-1772792463650.wav"></audio>
+
+      <audio data-hf-id="hf-x6c5" id="sfx-twist-orchestral" class="clip" data-start="32.5" data-duration="5.5" data-track-index="13" data-volume="0.30" src="channel/ปรัชญา/episodes/ep01-ความกลัว/sfx/Dramatic_orchestral__%232-1772871029210.wav"></audio>
+
+      <audio data-hf-id="hf-t2r7" id="sfx-insight-particles" class="clip" data-start="38" data-duration="3" data-track-index="14" data-volume="0.25" src="channel/ปรัชญา/episodes/ep01-ความกลัว/sfx/Atom_particles_spinn_%233-1772869472520.wav"></audio>
+
+      <audio data-hf-id="hf-3ocn" id="sfx-closing-boom" class="clip" data-start="41.5" data-duration="3" data-track-index="15" data-volume="0.30" src="channel/ปรัชญา/episodes/ep01-ความกลัว/sfx/Short_cinematic_boom-1772792298472.wav"></audio>
     </div>
 
     <script>
       window.__timelines = window.__timelines || {};
       const tl = gsap.timeline({ paused: true });
 
-      // Scene 1 - kicker + gradient title entrance (varied eases)
-      tl.from("#kicker", { autoAlpha: 0, y: 20, duration: 0.6, ease: "power2.out" }, 0.2);
-      tl.from("#title", { autoAlpha: 0, y: 60, scale: 0.92, duration: 0.9, ease: "expo.out" }, 0.4);
-      // subtle mid-scene drift so the scene is never a static slide
-      tl.to("#title", { y: -10, duration: 2.2, ease: "sine.inOut" }, 1.4);
+      /* ---------- Ken Burns on each video ---------- */
+      gsap.utils.toArray("video.bg").forEach((bg, i) => {
+        const fromScale = i % 2 === 0 ? 1.0 : 1.12;
+        const toScale = i % 2 === 0 ? 1.12 : 1.0;
+        const start = parseFloat(bg.dataset.start);
+        const dur = parseFloat(bg.dataset.duration);
+        tl.fromTo(
+          bg,
+          { scale: fromScale, transformOrigin: "50% 50%" },
+          { scale: toScale, duration: dur, ease: "sine.inOut", overwrite: "auto" },
+          start
+        );
+      });
 
-      // Scene 2 - deterministic count-up to 60 driven by the timeline (no setInterval)
-      const counter = { v: 0 };
-      tl.set("#scene-2", { autoAlpha: 0 }, 0);
-      tl.to("#scene-2", { autoAlpha: 1, duration: 0.4, ease: "power1.out" }, 4);
-      tl.to(
-        counter,
-        {
-          v: 60,
-          duration: 1.8,
-          ease: "power2.out",
-          onUpdate: () => {
-            document.querySelector("#stat").textContent = Math.round(counter.v);
-          },
-        },
-        4.2
+      /* ---------- Glow drift ---------- */
+      gsap.utils.toArray(".glow").forEach((g) => {
+        const start = parseFloat(g.dataset.start);
+        const dur = parseFloat(g.dataset.duration);
+        tl.fromTo(
+          g,
+          { opacity: 0, scale: 0.7 },
+          { opacity: 0.9, scale: 1.1, duration: dur * 0.6, ease: "sine.out", overwrite: "auto" },
+          start
+        );
+        tl.to(g, { opacity: 0, duration: 0.5, ease: "power1.in", overwrite: "auto" }, start + dur - 0.5);
+      });
+
+      /* ---------- Captions — explicit per-caption animations (lint wants literal positions) ---------- */
+      const CAPS = [
+        { sel: "#cap-1 .caption-inner", start: 0.4,  end: 2.4  },
+        { sel: "#cap-3 .caption-inner", start: 8.6,  end: 15.6 },
+        { sel: "#cap-4 .caption-inner", start: 17.2, end: 24.0 },
+        { sel: "#cap-5 .caption-inner", start: 26.2, end: 31.7 },
+        { sel: "#cap-6 .caption-inner", start: 33.4, end: 37.4 },
+        { sel: "#cap-7 .caption-inner", start: 38.4, end: 41.2 },
+        { sel: "#cap-8 .caption-inner", start: 41.8, end: 45.8 },
+      ];
+
+      tl.fromTo("#cap-1 .caption-inner", { opacity: 0, y: 36, scale: 0.96 }, { opacity: 1, y: 0, scale: 1, duration: 0.55, ease: "power2.out", overwrite: "auto" }, 0.4);
+      tl.to("#cap-1 .caption-inner", { opacity: 0, y: -16, duration: 0.4, ease: "power2.in", overwrite: "auto" }, 2.0);
+      tl.set("#cap-1 .caption-inner", { opacity: 0 }, 2.4);
+
+      tl.fromTo("#cap-3 .caption-inner", { opacity: 0, y: 36, scale: 0.96 }, { opacity: 1, y: 0, scale: 1, duration: 0.55, ease: "power2.out", overwrite: "auto" }, 8.6);
+      tl.to("#cap-3 .caption-inner", { opacity: 0, y: -16, duration: 0.4, ease: "power2.in", overwrite: "auto" }, 15.2);
+      tl.set("#cap-3 .caption-inner", { opacity: 0 }, 15.6);
+
+      tl.fromTo("#cap-4 .caption-inner", { opacity: 0, y: 36, scale: 0.96 }, { opacity: 1, y: 0, scale: 1, duration: 0.55, ease: "power2.out", overwrite: "auto" }, 17.2);
+      tl.to("#cap-4 .caption-inner", { opacity: 0, y: -16, duration: 0.4, ease: "power2.in", overwrite: "auto" }, 23.6);
+      tl.set("#cap-4 .caption-inner", { opacity: 0 }, 24.0);
+
+      tl.fromTo("#cap-5 .caption-inner", { opacity: 0, y: 36, scale: 0.96 }, { opacity: 1, y: 0, scale: 1, duration: 0.55, ease: "power2.out", overwrite: "auto" }, 26.2);
+      tl.to("#cap-5 .caption-inner", { opacity: 0, y: -16, duration: 0.4, ease: "power2.in", overwrite: "auto" }, 31.3);
+      tl.set("#cap-5 .caption-inner", { opacity: 0 }, 31.7);
+
+      tl.fromTo("#cap-6 .caption-inner", { opacity: 0, y: 36, scale: 0.96 }, { opacity: 1, y: 0, scale: 1, duration: 0.55, ease: "power2.out", overwrite: "auto" }, 33.4);
+      tl.to("#cap-6 .caption-inner", { opacity: 0, y: -16, duration: 0.4, ease: "power2.in", overwrite: "auto" }, 37.0);
+      tl.set("#cap-6 .caption-inner", { opacity: 0 }, 37.4);
+
+      tl.fromTo("#cap-7 .caption-inner", { opacity: 0, y: 36, scale: 0.96 }, { opacity: 1, y: 0, scale: 1, duration: 0.55, ease: "power2.out", overwrite: "auto" }, 38.4);
+      tl.to("#cap-7 .caption-inner", { opacity: 0, y: -16, duration: 0.4, ease: "power2.in", overwrite: "auto" }, 40.8);
+      tl.set("#cap-7 .caption-inner", { opacity: 0 }, 41.2);
+
+      tl.fromTo("#cap-8 .caption-inner", { opacity: 0, y: 36, scale: 0.96 }, { opacity: 1, y: 0, scale: 1, duration: 0.55, ease: "power2.out", overwrite: "auto" }, 41.8);
+      tl.to("#cap-8 .caption-inner", { opacity: 0, y: -16, duration: 0.4, ease: "power2.in", overwrite: "auto" }, 45.4);
+      tl.set("#cap-8 .caption-inner", { opacity: 0 }, 45.8);
+
+      /* ---------- Endmark ---------- */
+      tl.fromTo(
+        "#endmark",
+        { opacity: 0, letterSpacing: "0.65em" },
+        { opacity: 1, letterSpacing: "0.45em", duration: 1.0, ease: "power2.out", overwrite: "auto" },
+        41.7
       );
-      tl.from("#stat-label", { autoAlpha: 0, y: 16, duration: 0.5 }, 4.6);
-      tl.to("#scene-2", { autoAlpha: 0, duration: 0.3 }, 6.8);
+      tl.to("#endmark", { opacity: 0, duration: 0.5, overwrite: "auto" }, 45.5);
 
-      // Scene 3 - outro
-      tl.set("#scene-3", { autoAlpha: 0 }, 0);
-      tl.to("#scene-3", { autoAlpha: 1, duration: 0.4 }, 7);
-      tl.from("#outro", { autoAlpha: 0, y: 40, duration: 0.8, ease: "power3.out" }, 7.1);
-      tl.from("#outro small", { autoAlpha: 0, letterSpacing: "0.6em", duration: 0.9, ease: "power2.out" }, 7.6);
+      /* ---------- Grain subtle pulse ---------- */
+      tl.fromTo(
+        "#grain",
+        { opacity: 0.30 },
+        { opacity: 0.55, duration: 46, ease: "sine.inOut", overwrite: "auto" },
+        0
+      );
 
-      window.__timelines["main"] = tl;
+      window.__timelines["fear-ep01"] = tl;
     </script>
   </body>
 </html>

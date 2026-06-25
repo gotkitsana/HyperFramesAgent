@@ -1,35 +1,45 @@
 # Fonts
 
-ฟอนต์ไทย bold sans-serif สำหรับสไตล์ "สาระไม่น่ารู้"
+ฟอนต์ของช่อง "สาระไม่น่ารู้"
 
-## ต้องโหลดมาวางที่นี่
+## โครงสร้างปัจจุบัน
 
-ดาวน์โหลดเป็น **.woff2** (ขนาดเล็ก, lint ผ่าน) แล้ววางตรงนี้:
-
-| ไฟล์ที่คาดหวัง | น้ำหนัก | ใช้กับ | แหล่งโหลด |
-|---|---|---|---|
-| `IBMPlexSansThai-Bold.woff2` | 700 | body / caption | https://fonts.google.com/specimen/IBM+Plex+Sans+Thai |
-| `IBMPlexSansThai-Regular.woff2` | 400 | body small | (เดียวกัน) |
-| `Anuphan-ExtraBold.woff2` | 800 | display / keyword punch | https://fonts.google.com/specimen/Anuphan |
-| `Anuphan-Bold.woff2` | 700 | headline | (เดียวกัน) |
-| `BaiJamjuree-SemiBold.woff2` | 600 | alt body | https://fonts.google.com/specimen/Bai+Jamjuree |
-
-## แปลง .ttf → .woff2 (ถ้า Google โหลดมาเป็น .ttf)
-
-```bash
-# ใช้ woff2 CLI (brew install woff2)
-woff2_compress IBMPlexSansThai-Bold.ttf
+```
+fonts/
+├── Mali/              ← PRIMARY — ฟอนต์หลักของช่อง
+├── Anuphan/           ← Fallback (variable, น้ำหนัก 100-900)
+└── Bai_Jamjuree/      ← Fallback / alt body
 ```
 
-หรือเว็บแปลง: https://cloudconvert.com/ttf-to-woff2
+## Mali (primary)
 
-## การใช้ใน CSS
+ใช้กับทุก scene เป็น default ผ่าน `var(--font-display)` และ `var(--font-body)`
+ใน `compositions/sarra-tokens.css`
 
-ดู `compositions/sarra-tokens.css` — `@font-face` ถูก declare ไว้ให้แล้ว
-แค่วางไฟล์ตามชื่อข้างบนก็ใช้งานได้ทันที
+น้ำหนักที่ register ไว้ใน `@font-face`:
+- 400 Regular
+- 500 Medium
+- 600 SemiBold
+- 700 Bold (น้ำหนักสูงสุดที่ Mali มี — ใช้กับ headline/keyword คู่กับ outline)
+- 700 italic Bold Italic
 
-## ⚠️ หลีกเลี่ยง
+Mali ไม่มี ExtraBold/Black — ใช้ `--text-outline` (อยู่ใน tokens.css)
+เพื่อให้ดูหนาแน่นบนภาพพื้นหลังแทน
 
-- `Kanit`, `Prompt` — เกร่อมาก และอยู่ใน avoid list ของ HyperFrames design guide
-- `Noto Sans Thai` — อยู่ใน avoid list
-- ฟอนต์ที่ไม่มีน้ำหนัก ≥700 — DNA ต้องการตัวอักษรหนา
+## Fallback
+
+- **Anuphan** — variable font, ใช้ได้ทุกน้ำหนัก 100-900 (สำหรับ scene ที่ต้องการ ExtraBold)
+- **Bai Jamjuree** — Bold + SemiBold สำหรับ caption เล็ก
+
+## ⚠️ Format note
+
+ไฟล์ตอนนี้เป็น `.ttf` ทำงานได้ปกติใน HyperFrames
+ถ้าอยากลดขนาด ติดตั้ง `brew install woff2` แล้วแปลง:
+```bash
+woff2_compress Mali-Bold.ttf
+```
+
+## License
+
+ทุกฟอนต์อยู่ภายใต้ **SIL Open Font License (OFL)** — ดู `OFL.txt` ในแต่ละโฟลเดอร์
+ใช้เชิงพาณิชย์ได้ฟรี

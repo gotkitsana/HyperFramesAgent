@@ -8,43 +8,73 @@
  * วาง font .woff2 ที่ assets/fonts/ ตามชื่อใน @font-face ด้านล่าง
  * ============================================================ */
 
-/* ---------- Fonts ---------- */
+/* ---------- Fonts ----------
+ * Primary: Mali — ฟอนต์หลักของช่อง "สาระไม่น่ารู้"
+ *   มี weight สูงสุดที่ 700 (Bold) ใช้คู่กับ outline+shadow ในคลาส .sarra-*
+ *   เพื่อให้ดูหนาแน่นบนภาพพื้นหลัง
+ * Fallback: Anuphan (variable), Bai Jamjuree (static SemiBold/Bold)
+ * Format: ttf (วางจาก Google Fonts โดยตรง)
+ * --------------------------------- */
 
 @font-face {
-  font-family: "Anuphan";
-  src: url("../assets/fonts/Anuphan-ExtraBold.woff2") format("woff2");
-  font-weight: 800;
-  font-style: normal;
-  font-display: block; /* block = wait, ป้องกัน FOUT ใน render */
-}
-
-@font-face {
-  font-family: "Anuphan";
-  src: url("../assets/fonts/Anuphan-Bold.woff2") format("woff2");
+  font-family: "Mali";
+  src: url("../assets/fonts/Mali/Mali-Bold.ttf") format("truetype");
   font-weight: 700;
   font-style: normal;
   font-display: block;
 }
 
 @font-face {
-  font-family: "IBM Plex Sans Thai";
-  src: url("../assets/fonts/IBMPlexSansThai-Bold.woff2") format("woff2");
-  font-weight: 700;
+  font-family: "Mali";
+  src: url("../assets/fonts/Mali/Mali-SemiBold.ttf") format("truetype");
+  font-weight: 600;
   font-style: normal;
   font-display: block;
 }
 
 @font-face {
-  font-family: "IBM Plex Sans Thai";
-  src: url("../assets/fonts/IBMPlexSansThai-Regular.woff2") format("woff2");
+  font-family: "Mali";
+  src: url("../assets/fonts/Mali/Mali-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: block;
+}
+
+@font-face {
+  font-family: "Mali";
+  src: url("../assets/fonts/Mali/Mali-Regular.ttf") format("truetype");
   font-weight: 400;
   font-style: normal;
   font-display: block;
 }
 
 @font-face {
+  font-family: "Mali";
+  src: url("../assets/fonts/Mali/Mali-BoldItalic.ttf") format("truetype");
+  font-weight: 700;
+  font-style: italic;
+  font-display: block;
+}
+
+@font-face {
+  font-family: "Anuphan";
+  src: url("../assets/fonts/Anuphan/Anuphan-VariableFont_wght.ttf") format("truetype-variations");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: block;
+}
+
+@font-face {
   font-family: "Bai Jamjuree";
-  src: url("../assets/fonts/BaiJamjuree-SemiBold.woff2") format("woff2");
+  src: url("../assets/fonts/Bai_Jamjuree/BaiJamjuree-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: block;
+}
+
+@font-face {
+  font-family: "Bai Jamjuree";
+  src: url("../assets/fonts/Bai_Jamjuree/BaiJamjuree-SemiBold.ttf") format("truetype");
   font-weight: 600;
   font-style: normal;
   font-display: block;
@@ -71,9 +101,10 @@
   --body:      32px;
   --label:     20px;
 
-  /* Font families */
-  --font-display: "Anuphan", "IBM Plex Sans Thai", system-ui, sans-serif;
-  --font-body:    "IBM Plex Sans Thai", "Bai Jamjuree", system-ui, sans-serif;
+  /* Font families — Mali เป็นหลัก, ที่เหลือ fallback */
+  --font-display: "Mali", "Anuphan", "Bai Jamjuree", system-ui, sans-serif;
+  --font-body:    "Mali", "Bai Jamjuree", "Anuphan", system-ui, sans-serif;
+  --font-numeric: "Mali", "Bai Jamjuree", system-ui, sans-serif;
 
   /* Spacing (ตาราง 8) */
   --s-1: 8px;
@@ -98,7 +129,7 @@
 
 .sarra-display {
   font-family: var(--font-display);
-  font-weight: 800;
+  font-weight: 700;
   font-size: var(--display);
   line-height: 0.95;
   letter-spacing: -0.01em;
@@ -108,12 +139,11 @@
 
 .sarra-keyword {
   font-family: var(--font-display);
-  font-weight: 800;
+  font-weight: 700;
   font-size: var(--keyword);
   line-height: 0.95;
   color: var(--color-warning);
   text-shadow: var(--text-outline);
-  text-transform: uppercase;
 }
 
 .sarra-headline {
